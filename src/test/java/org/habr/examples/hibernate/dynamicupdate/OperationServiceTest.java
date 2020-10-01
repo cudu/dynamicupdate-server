@@ -5,11 +5,11 @@ import static org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.habr.examples.hibernate.dynamicupdate.services.OperationService;
 import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
 import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountVew;
 import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationView;
+import org.habr.examples.hibernate.dynamicupdate.services.OperationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -78,12 +78,27 @@ class OperationServiceTest {
   void successfulUpdateWithNewAccount() {
     Operation current = operationService.get(actualId);
     OperationView patch = operationMapper.map(current);
+    patch.setType(CREDIT);
     patch.setAccount(AccountVew.builder().name("account_1").build());
     operationService.update(patch);
     expectedVersion++;
     Operation op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertNotNull(op.getAccount()),
+        () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
+  }
+
+  @Test
+  @Order(5)
+  void successfulUpdateAccountName() {
+    Operation current = operationService.get(actualId);
+    OperationView patch = operationMapper.map(current);
+    String expectedAccountName = "account_2";
+    patch.getAccount().setName(expectedAccountName);
+    operationService.update(patch);
+    Operation op = operationService.get(actualId);
+    assertAll(
+        () -> Assertions.assertEquals(expectedAccountName, op.getAccount().getName()),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
   }
 }

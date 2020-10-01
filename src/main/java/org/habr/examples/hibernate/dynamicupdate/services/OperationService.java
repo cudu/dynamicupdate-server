@@ -1,6 +1,5 @@
 package org.habr.examples.hibernate.dynamicupdate.services;
 
-import lombok.RequiredArgsConstructor;
 import org.habr.examples.hibernate.dynamicupdate.exceptions.DynamicUpdateEntityNotFoundException;
 import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
@@ -13,15 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class OperationService {
+public class OperationService extends DomainEntityService<Operation> {
 
-  private final OperationRepository repository;
   private final OperationMapper operationMapper;
 
   public OperationService(
       OperationRepository repository,
       OperationMapper operationMapper) {
-    this.repository = repository;
+    super(Operation.class, repository);
     this.operationMapper = operationMapper;
   }
 
@@ -30,6 +28,11 @@ public class OperationService {
     return repository
         .findById(id)
         .orElseThrow(() -> new DynamicUpdateEntityNotFoundException(Operation.class, id));
+  }
+
+  @Override
+  public Operation createNewInstance() {
+    return new Operation();
   }
 
   @Transactional(readOnly = true)

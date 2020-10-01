@@ -2,8 +2,6 @@ package org.habr.examples.hibernate.dynamicupdate.models.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
@@ -24,7 +21,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "operations")
+@Table(name = "accounts")
 public class Account implements DomainEntity {
 
   @Id
@@ -40,10 +37,6 @@ public class Account implements DomainEntity {
   private String name;
 
   @Column private int val;
-
-  public void setId(Long id) {
-    //
-  }
 
   @Override
   public boolean equals(Object o) {

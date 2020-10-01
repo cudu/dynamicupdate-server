@@ -43,15 +43,11 @@ public class Operation implements DomainEntity {
   @Enumerated(EnumType.STRING)
   private Type type;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "account_id")
   private Account account;
 
   @Column private int val;
-
-  public void setId(Long id) {
-    //
-  }
 
   @Override
   public boolean equals(Object o) {
