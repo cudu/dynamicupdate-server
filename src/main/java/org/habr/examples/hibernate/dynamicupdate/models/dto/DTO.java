@@ -1,5 +1,8 @@
 package org.habr.examples.hibernate.dynamicupdate.models.dto;
 
-public interface DTO {
+import org.habr.examples.hibernate.dynamicupdate.models.domain.DomainEntity;
+
+public interface DTO<T extends DomainEntity> {
   Long getId();
+  T create();
 }

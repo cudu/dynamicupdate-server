@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type;
 
 @Builder
@@ -12,11 +13,16 @@ import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationView implements DTO {
+public class OperationView implements DTO<Operation> {
 
   private Long id;
   private short version;
   private int val;
   protected Type type;
-  private AccountVew account;
+  private AccountView account;
+
+  @Override
+  public Operation create() {
+    return new Operation();
+  }
 }

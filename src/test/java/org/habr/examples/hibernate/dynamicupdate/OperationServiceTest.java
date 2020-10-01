@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
-import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountVew;
+import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountView;
 import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationView;
 import org.habr.examples.hibernate.dynamicupdate.services.OperationService;
 import org.junit.jupiter.api.Assertions;
@@ -20,9 +20,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+@ActiveProfiles("h2")
 @SpringJUnitConfig
 @SpringBootTest(classes = DynamicUpdateApp.class)
 @ExtendWith(SpringExtension.class)
@@ -79,7 +81,7 @@ class OperationServiceTest {
     Operation current = operationService.get(actualId);
     OperationView patch = operationMapper.map(current);
     patch.setType(CREDIT);
-    patch.setAccount(AccountVew.builder().name("account_1").build());
+    patch.setAccount(AccountView.builder().name("account_1").build());
     operationService.update(patch);
     expectedVersion++;
     Operation op = operationService.get(actualId);
