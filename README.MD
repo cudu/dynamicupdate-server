@@ -15,7 +15,7 @@ Environment variables are required to run the application:
 
 Run an executable jar file:
 ```
-java -jar taget/dynamic-update-server.jar
+java -jar target/dynamic-update-server.jar -Dspring.profiles.active=h2
 ```
 
 Spring boot run:
