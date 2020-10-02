@@ -1,0 +1,13 @@
+ #
+ # The GitHub Action for Maven releases used for auto-releasing 
+ # your java artefacts each time you commit into master.
+ #
+ - name: Auto-release
+      uses: qcastel/github-actions-maven-release@v1.11.2
+      with:
+        release-branch-name: "master"
+
+        git-release-bot-name: "cudu"
+        git-release-bot-email: "cudu@mail.ru"
+
+        access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
