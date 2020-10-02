@@ -16,6 +16,8 @@ public class DomainMapperResolver {
 
   @ObjectFactory
   public <T extends DomainEntity, K extends DTO<T>> T resolve(K dto, @TargetType Class<T> type) {
-    return dto != null && dto.getId() != null ? entityManager.find(type, dto.getId()) : dto.create();
+    return dto != null && dto.getId() != null ?
+        entityManager.find(type, dto.getId()) :
+        dto.create();
   }
 }
