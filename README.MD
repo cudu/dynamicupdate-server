@@ -1,3 +1,6 @@
+![](https://github.com/cudu/dynamicupdate-server/workflows/build&test/badge.svg)
+
+
 ### Build
 
 Build an executable jar file(with tests & integration tests):
