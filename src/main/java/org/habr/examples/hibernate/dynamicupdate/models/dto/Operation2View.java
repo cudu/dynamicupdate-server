@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type;
+import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation2;
 
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OperationView implements DTO<Operation> {
+public class Operation2View implements DTO<Operation2> {
   private Long id;
   private short version;
   private int val;
@@ -21,7 +21,7 @@ public class OperationView implements DTO<Operation> {
   private AccountView account;
 
   @Override
-  public Operation create() {
-    return new Operation();
+  public Operation2 create() {
+    return new Operation2();
   }
 }

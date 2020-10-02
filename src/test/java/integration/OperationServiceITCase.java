@@ -60,7 +60,7 @@ class OperationServiceITCase {
     Operation op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertEquals(op.getType(), DEBIT),
-        () -> Assertions.assertEquals(expectedVersion , op.getVersion()));
+        () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
   }
 
   @Test

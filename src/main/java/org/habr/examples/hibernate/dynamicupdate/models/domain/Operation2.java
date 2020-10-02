@@ -14,17 +14,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Setter
 @Entity
 @SuperBuilder
-@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "operations")
-public class Operation extends AbstractDomainEntity {
+@Table(name = "operations2")
+public class Operation2 extends AbstractDomainEntity {
 
   @Column
   @Enumerated(EnumType.STRING)
