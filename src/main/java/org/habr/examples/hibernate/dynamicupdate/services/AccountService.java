@@ -11,10 +11,4 @@ public class AccountService extends DomainEntityService<Account> {
       AccountRepository repository) {
     super(Account.class, repository);
   }
-
-
-  @Override
-  public Account createNewInstance() {
-    return new Account();
-  }
 }

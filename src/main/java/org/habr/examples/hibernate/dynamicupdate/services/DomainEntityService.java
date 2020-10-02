@@ -18,6 +18,4 @@ public abstract class DomainEntityService<T extends DomainEntity> {
         .findById(id)
         .orElseThrow(() -> new DynamicUpdateEntityNotFoundException(_class, id));
   }
-
-  public abstract T createNewInstance();
 }

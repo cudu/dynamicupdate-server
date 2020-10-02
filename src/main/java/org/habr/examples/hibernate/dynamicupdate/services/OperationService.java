@@ -30,11 +30,6 @@ public class OperationService extends DomainEntityService<Operation> {
         .orElseThrow(() -> new DynamicUpdateEntityNotFoundException(Operation.class, id));
   }
 
-  @Override
-  public Operation createNewInstance() {
-    return new Operation();
-  }
-
   @Transactional(readOnly = true)
   public Operation getReference(long id) {
     return repository.getOne(id);
