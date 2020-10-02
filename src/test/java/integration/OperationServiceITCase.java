@@ -1,10 +1,11 @@
-package org.habr.examples.hibernate.dynamicupdate;
+package integration;
 
 import static org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type.CREDIT;
 import static org.habr.examples.hibernate.dynamicupdate.models.domain.Operation.Type.DEBIT;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.habr.examples.hibernate.dynamicupdate.DynamicUpdateApp;
 import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
 import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountView;
@@ -30,7 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @ExtendWith(SpringExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
-class OperationServiceTest {
+class OperationServiceITCase {
 
   private Long actualId;
   private short expectedVersion;
@@ -101,6 +102,20 @@ class OperationServiceTest {
     Operation op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertEquals(expectedAccountName, op.getAccount().getName()),
+        () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
+  }
+
+  @Test
+  @Order(6)
+  void successfulDeleteLinkWithAccount() {
+    Operation current = operationService.get(actualId);
+    OperationView patch = operationMapper.map(current);
+    patch.setAccount(null);
+    operationService.update(patch);
+    expectedVersion++;
+    Operation op = operationService.get(actualId);
+    assertAll(
+        () -> Assertions.assertNull(op.getAccount()),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
   }
 }
