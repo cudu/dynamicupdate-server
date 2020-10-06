@@ -6,10 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.habr.examples.hibernate.dynamicupdate.DynamicUpdateApp;
-import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
-import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
-import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountView;
-import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationView;
+import org.habr.examples.hibernate.dynamicupdate.models.dto.AccountDetails;
+import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationDetails;
 import org.habr.examples.hibernate.dynamicupdate.services.OperationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -36,15 +34,14 @@ class OperationServiceITCase {
   private Long actualId;
   private short expectedVersion;
 
-  @Autowired private OperationMapper operationMapper;
   @Autowired private OperationService operationService;
 
   @Test
   @Order(1)
   void successfulCreateCreditOperation() {
-    OperationView op = OperationView.builder().type(CREDIT).version((short) 0).val(10).build();
-    actualId = operationService.create(op);
-    Operation current = operationService.get(actualId);
+    OperationDetails op = OperationDetails.builder().type(CREDIT).version((short) 0).val(10).build();
+    actualId = operationService.create(op).getId();
+    OperationDetails current = operationService.get(actualId);
     expectedVersion = current.getVersion();
     assertNotNull(actualId);
   }
@@ -52,12 +49,11 @@ class OperationServiceITCase {
   @Test
   @Order(2)
   void successUpdateToDebitType() {
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails patch = operationService.get(actualId);
     patch.setType(DEBIT);
     operationService.update(patch);
     expectedVersion++;
-    Operation op = operationService.get(actualId);
+    OperationDetails op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertEquals(op.getType(), DEBIT),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
@@ -66,11 +62,10 @@ class OperationServiceITCase {
   @Test
   @Order(3)
   void failureUpdateWithDebitType() {
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails patch = operationService.get(actualId);
     patch.setType(DEBIT);
     operationService.update(patch);
-    Operation op = operationService.get(actualId);
+    OperationDetails op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertEquals(op.getType(), DEBIT),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
@@ -79,13 +74,12 @@ class OperationServiceITCase {
   @Test
   @Order(4)
   void successfulUpdateWithNewAccount() {
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails patch = operationService.get(actualId);
     patch.setType(CREDIT);
-    patch.setAccount(AccountView.builder().name("account_1").build());
+    patch.setAccount(AccountDetails.builder().name("account_1").build());
     operationService.update(patch);
     expectedVersion++;
-    Operation op = operationService.get(actualId);
+    OperationDetails op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertNotNull(op.getAccount()),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
@@ -94,12 +88,11 @@ class OperationServiceITCase {
   @Test
   @Order(5)
   void successfulUpdateAccountName() {
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails patch = operationService.get(actualId);
     String expectedAccountName = "account_2";
     patch.getAccount().setName(expectedAccountName);
     operationService.update(patch);
-    Operation op = operationService.get(actualId);
+    OperationDetails op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertEquals(expectedAccountName, op.getAccount().getName()),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));
@@ -108,12 +101,11 @@ class OperationServiceITCase {
   @Test
   @Order(6)
   void successfulDeleteLinkWithAccount() {
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails patch = operationService.get(actualId);
     patch.setAccount(null);
     operationService.update(patch);
     expectedVersion++;
-    Operation op = operationService.get(actualId);
+    OperationDetails op = operationService.get(actualId);
     assertAll(
         () -> Assertions.assertNull(op.getAccount()),
         () -> Assertions.assertEquals(expectedVersion, op.getVersion()));

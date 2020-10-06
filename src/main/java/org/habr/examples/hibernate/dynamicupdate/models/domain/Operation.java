@@ -30,7 +30,7 @@ public class Operation extends AbstractDomainEntity {
   @Enumerated(EnumType.STRING)
   private Type type;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinColumn(name = "account_id")
   private Account account;
 

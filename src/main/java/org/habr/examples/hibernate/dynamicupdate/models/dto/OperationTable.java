@@ -5,20 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.habr.examples.hibernate.dynamicupdate.models.domain.Account;
 
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountView implements DTO<Account> {
+public class OperationTable implements TableDTO {
   private Long id;
-  private short version;
-  private String name;
+  private int val;
+  protected String type;
+  private String accountName;
 
-  @Override
-  public Account create() {
-    return new Account();
-  }
 }

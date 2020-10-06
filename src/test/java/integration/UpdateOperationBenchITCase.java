@@ -6,10 +6,9 @@ import java.util.concurrent.TimeUnit;
 import org.habr.examples.hibernate.dynamicupdate.DynamicUpdateApp;
 import org.habr.examples.hibernate.dynamicupdate.mappers.Operation2Mapper;
 import org.habr.examples.hibernate.dynamicupdate.mappers.OperationMapper;
-import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation;
 import org.habr.examples.hibernate.dynamicupdate.models.domain.Operation2;
-import org.habr.examples.hibernate.dynamicupdate.models.dto.Operation2View;
-import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationView;
+import org.habr.examples.hibernate.dynamicupdate.models.dto.Operation2Details;
+import org.habr.examples.hibernate.dynamicupdate.models.dto.OperationDetails;
 import org.habr.examples.hibernate.dynamicupdate.services.Operation2Service;
 import org.habr.examples.hibernate.dynamicupdate.services.OperationService;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -35,7 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @TestMethodOrder(OrderAnnotation.class)
 class UpdateOperationBenchITCase {
 
-  private final int count = 100000;
+  private final int count = 10000;
 
   @Autowired private OperationMapper operationMapper;
   @Autowired private OperationService operationService;
@@ -46,10 +45,9 @@ class UpdateOperationBenchITCase {
   @Test
   @Order(1)
   void dynamicUpdateOperationValBenchmark() {
-    OperationView op = OperationView.builder().type(CREDIT).version((short) 0).val(0).build();
-    long actualId = operationService.create(op);
-    Operation current = operationService.get(actualId);
-    OperationView patch = operationMapper.map(current);
+    OperationDetails op = OperationDetails.builder().type(CREDIT).version((short) 0).val(0).build();
+    long actualId = operationService.create(op).getId();
+    OperationDetails patch = operationService.get(actualId);
     short prevVersion = patch.getVersion();
 
     long start = System.nanoTime();
@@ -68,10 +66,9 @@ class UpdateOperationBenchITCase {
   @Test
   @Order(2)
   void updateOperation2ValBenchmark() {
-    Operation2View op = Operation2View.builder().type(CREDIT).version((short) 0).val(0).build();
-    long actualId = operation2Service.create(op);
-    Operation2 current = operation2Service.get(actualId);
-    Operation2View patch = operation2Mapper.map(current);
+    Operation2Details op = Operation2Details.builder().type(CREDIT).version((short) 0).val(0).build();
+    Operation2 op2 = operation2Service.create(op);
+    Operation2Details patch = operation2Service.get(op2.getId());
     short prevVersion = patch.getVersion();
 
     long start = System.nanoTime();

@@ -1,7 +1,7 @@
 package org.habr.examples.hibernate.dynamicupdate.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.habr.examples.hibernate.dynamicupdate.exceptions.models.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,16 +16,17 @@ public class DynamicControllerAdvice extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(
       value = {DynamicUpdateException.class, DynamicUpdateEntityNotFoundException.class})
-  protected ResponseEntity<String> handleCheckedError(
+  protected ResponseEntity<ErrorResponse> handleCheckedError(
       ResponseStatusException ex, WebRequest request) {
-    return ResponseEntity.status(ex.getStatus()).body(ex.getReason());
+    return ResponseEntity.status(ex.getStatus()).body(ErrorResponse.builder().message(ex.getReason()).build());
   }
 
   @ExceptionHandler(
       value = {RuntimeException.class})
-  protected ResponseEntity<Object> handleUncheckedError(
+  protected ResponseEntity<ErrorResponse> handleUncheckedError(
       RuntimeException ex, WebRequest request) {
     String bodyOfResponse = ex.getMessage();
-    return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ErrorResponse.builder().message(bodyOfResponse).build());
   }
 }
